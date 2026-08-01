@@ -1,10 +1,41 @@
-import { Request, Response } from "express";
+import prismaClient from "../../prisma";
+import { hash } from "bcrypt";
+interface CreateUserProps {
+  name: string;
+  email: string;
+  password: string;
+}
 
 class CreateUserService {
-  async execute(req: Request, res: Response) {
-    console.log("executando o service!");
+  async execute({ name, email, password }: CreateUserProps) {
+    const userAlreadyExists = await prismaClient.user.findFirst({
+      where: {
+        email: email,
+      },
+    });
 
-    return "Usuario criado";
+    if (userAlreadyExists) {
+      throw new Error("User already exists");
+    }
+
+    const hashedPassword = await hash(password, 8);
+
+    const user = await prismaClient.user.create({
+      data: {
+        name: name,
+        email: email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+
+    return user;
   }
 }
 
