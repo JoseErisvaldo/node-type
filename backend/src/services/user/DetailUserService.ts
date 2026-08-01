@@ -1,0 +1,30 @@
+import prismaClient from "../../prisma";
+
+class DetailUserService {
+  async execute(user_id: string) {
+    try {
+      const user = await prismaClient.user.findFirst({
+        where: {
+          id: user_id,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      return user;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  }
+}
+export { DetailUserService };
