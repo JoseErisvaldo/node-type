@@ -9,3 +9,5 @@
 ### npx tsc --init
 
 ### npm i cors dotenv
+
+### npm install zod
