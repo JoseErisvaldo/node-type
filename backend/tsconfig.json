@@ -50,6 +50,6 @@
     // Type Acquisition
     "types": ["node"] // Pacotes de tipos a incluir (@types/node)
   },
-  "include": ["src/**/*"], // Arquivos a serem incluídos na compilação
+  "include": ["src/**/*", "prisma.config.ts"], // Arquivos a serem incluídos na compilação
   "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"] // Arquivos/pastas excluídos
 }
