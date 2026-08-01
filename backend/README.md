@@ -11,3 +11,5 @@
 ### npm i cors dotenv
 
 ### npm install zod
+
+### criar a hash de senha https://www.md5hashgenerator.com/ e instalar npm install jsonwebtoken
