@@ -11,6 +11,7 @@ import { isAdmin } from "./middlewares/isAdmin";
 import { isAuthenticated } from "./middlewares/isAuthenticated";
 import { validateSchema } from "./middlewares/validateSchema";
 import { createCategorySchema } from "./schemas/categorySchema";
+import { createProductSchema } from "./schemas/productSchema";
 import { authUserSchema, createUserSchema } from "./schemas/userSchema";
 
 const router = Router();
@@ -48,6 +49,7 @@ router.post(
   isAuthenticated,
   isAdmin,
   upload.single("file"),
+  validateSchema(createProductSchema),
   new CreateProductController().handle
 );
 
