@@ -1,39 +1,54 @@
 import { Router } from "express";
-import { AuthUserController } from "./controllers/user/AuthUserController";
-import { validateSchema } from "./middlewares/validateSchema";
-import { CreateUserController } from "./controllers/user/CreateUserController";
-import { createUserSchema, authUserSchema } from "./schemas/userSchema";
-import { DetailUserController } from "./controllers/user/DetailUserController";
-import { isAuthenticated } from "./middlewares/isAuthenticated";
-import { isAdmin } from "./middlewares/isAdmin";
+import multer from "multer";
+import uploadConfig from "./config/multer";
 import { CreateCategoryController } from "./controllers/category/CreateCategoryController";
-import { createCategorySchema } from "./schemas/categorySchema";
 import { ListCategoryController } from "./controllers/category/ListCategoryController";
+import { CreateProductController } from "./controllers/product/CreateProductController";
+import { AuthUserController } from "./controllers/user/AuthUserController";
+import { CreateUserController } from "./controllers/user/CreateUserController";
+import { DetailUserController } from "./controllers/user/DetailUserController";
+import { isAdmin } from "./middlewares/isAdmin";
+import { isAuthenticated } from "./middlewares/isAuthenticated";
+import { validateSchema } from "./middlewares/validateSchema";
+import { createCategorySchema } from "./schemas/categorySchema";
+import { authUserSchema, createUserSchema } from "./schemas/userSchema";
 
 const router = Router();
+const upload = multer(uploadConfig);
 
+// Rotas users
 router.post(
   "/users",
   validateSchema(createUserSchema),
-  new CreateUserController().handle,
+  new CreateUserController().handle
 );
 
 router.post(
   "/session",
   validateSchema(authUserSchema),
-  new AuthUserController().handle,
+  new AuthUserController().handle
 );
 
 router.get("/me", isAuthenticated, new DetailUserController().handle);
 
+// Rotas Category
 router.post(
   "/category",
   isAuthenticated,
   isAdmin,
   validateSchema(createCategorySchema),
-  new CreateCategoryController().handle,
+  new CreateCategoryController().handle
 );
 
 router.get("/category", isAuthenticated, new ListCategoryController().handle);
 
-export default router;
+// Rotas Products
+router.post(
+  "/product",
+  isAuthenticated,
+  isAdmin,
+  upload.single("file"),
+  new CreateProductController().handle
+);
+
+export { router };

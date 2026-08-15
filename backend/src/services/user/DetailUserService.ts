@@ -1,4 +1,4 @@
-import prismaClient from "../../prisma";
+import prismaClient from "../../prisma/index";
 
 class DetailUserService {
   async execute(user_id: string) {
@@ -13,18 +13,19 @@ class DetailUserService {
           email: true,
           role: true,
           createdAt: true,
-          updatedAt: true,
         },
       });
 
       if (!user) {
-        throw new Error("User not found");
+        throw new Error("Usuário não encontrado");
       }
 
       return user;
-    } catch (error) {
-      throw new Error((error as Error).message);
+    } catch (err) {
+      console.log(err);
+      throw new Error("Usuário não encontrado");
     }
   }
 }
+
 export { DetailUserService };

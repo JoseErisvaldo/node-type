@@ -1,26 +1,40 @@
-import { Request, Response, NextFunction } from "express";
-import prisma from "../prisma";
+import { NextFunction, Request, Response } from "express";
+import prismaClient from "../prisma/index";
 
 export const isAdmin = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
-  const user = req.user_id;
+  const user_id = req.user_id;
 
-  if (!user) {
-    res.status(401).json({ message: "User not authenticated" });
+  if (!user_id) {
+    res.status(401).json({
+      error: "Usuário sem permissão",
+    });
     return;
   }
 
-  const foundUser = await prisma.user.findUnique({
-    where: { id: user },
+  const user = await prismaClient.user.findFirst({
+    where: {
+      id: user_id,
+    },
   });
 
-  if (!foundUser || foundUser.role !== "ADMIN") {
-    res.status(403).json({ message: "User not permitted" });
+  if (!user) {
+    res.status(401).json({
+      error: "Usuário sem permissão",
+    });
     return;
   }
 
+  if (user.role !== "ADMIN") {
+    res.status(401).json({
+      error: "Usuário sem permissão",
+    });
+    return;
+  }
+
+  // Usuário é admin... então segue normal...
   next();
 };

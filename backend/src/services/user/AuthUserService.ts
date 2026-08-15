@@ -1,39 +1,51 @@
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import prismaClient from "../../prisma";
+import { compare } from "bcryptjs";
+import { sign } from "jsonwebtoken";
+import prismaClient from "../../prisma/index";
 
-const secretKey = process.env.JWT_SECRET || "default_secret_key";
+interface AuthUserServiceProps {
+  email: string;
+  password: string;
+}
 
 class AuthUserService {
-  async execute(
-    email: string,
-    password: string,
-  ): Promise<{ message: string; token: string }> {
-    const userExists = await prismaClient.user.findFirst({
+  async execute({ email, password }: AuthUserServiceProps) {
+    const user = await prismaClient.user.findFirst({
       where: {
         email: email,
       },
     });
 
-    if (!userExists) {
-      throw new Error("Email ou senha incorretos!");
+    if (!user) {
+      throw new Error("Email/Senha é obrigatório");
     }
 
-    const passwordMatch = await bcrypt.compare(password, userExists.password);
+    // Verificar se a senha está correta.
+    const passwordMatch = await compare(password, user.password);
 
     if (!passwordMatch) {
-      throw new Error("Email ou senha incorretos!");
+      throw new Error("Email/Senha é obrigatório");
     }
-    const token = jwt.sign(
-      { name: userExists.name, email: userExists.email, role: userExists.role },
-      secretKey,
+
+    // GERAR TOKEN JWT
+    const token = sign(
       {
-        subject: userExists.id,
-        expiresIn: "5m",
+        name: user.name,
+        email: user.email,
       },
+      process.env.JWT_SECRET as string,
+      {
+        subject: user.id,
+        expiresIn: "30d",
+      }
     );
 
-    return { message: "Login realizado com sucesso!", token };
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token: token,
+    };
   }
 }
 

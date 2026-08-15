@@ -1,4 +1,4 @@
-import prismaClient from "../../prisma";
+import prismaClient from "../../prisma/index";
 
 class ListCategoryService {
   async execute() {
@@ -13,9 +13,10 @@ class ListCategoryService {
           createdAt: "desc",
         },
       });
+
       return categories;
-    } catch (error) {
-      throw new Error("Failed to list categories");
+    } catch (err) {
+      throw new Error("Falha ao buscar categorias");
     }
   }
 }

@@ -1,19 +1,15 @@
-import prismaClient from "../../prisma";
+import prismaClient from "../../prisma/index";
 
-interface CreateCategoryRequest {
+interface CreateCategoryProps {
   name: string;
 }
 
 class CreateCategoryService {
-  async execute({ name }: CreateCategoryRequest): Promise<{
-    id: string;
-    name: string;
-    createdAt: Date;
-  }> {
+  async execute({ name }: CreateCategoryProps) {
     try {
       const category = await prismaClient.category.create({
         data: {
-          name,
+          name: name,
         },
         select: {
           id: true,
@@ -23,8 +19,8 @@ class CreateCategoryService {
       });
 
       return category;
-    } catch (error) {
-      throw new Error("Failed to create category");
+    } catch (err) {
+      throw new Error("Falha ao criar categoria");
     }
   }
 }

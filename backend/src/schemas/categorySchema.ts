@@ -1,9 +1,9 @@
-import z from "zod";
+import { z } from "zod";
 
 export const createCategorySchema = z.object({
   body: z.object({
     name: z
-      .string({ message: "Name is required" })
-      .min(2, { message: "Name must be at least 2 characters long" }),
+      .string({ message: "Categoria precisa ser um texto" })
+      .min(2, { message: "Nome da categoria precisa ter 2 caracteres" }),
   }),
 });
