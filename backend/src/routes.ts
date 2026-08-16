@@ -11,8 +11,12 @@ import { isAdmin } from "./middlewares/isAdmin";
 import { isAuthenticated } from "./middlewares/isAuthenticated";
 import { validateSchema } from "./middlewares/validateSchema";
 import { createCategorySchema } from "./schemas/categorySchema";
-import { createProductSchema } from "./schemas/productSchema";
+import {
+  createProductSchema,
+  listProductSchema,
+} from "./schemas/productSchema";
 import { authUserSchema, createUserSchema } from "./schemas/userSchema";
+import { ListProductController } from "./controllers/product/ListProductController";
 
 const router = Router();
 const upload = multer(uploadConfig);
@@ -21,13 +25,13 @@ const upload = multer(uploadConfig);
 router.post(
   "/users",
   validateSchema(createUserSchema),
-  new CreateUserController().handle
+  new CreateUserController().handle,
 );
 
 router.post(
   "/session",
   validateSchema(authUserSchema),
-  new AuthUserController().handle
+  new AuthUserController().handle,
 );
 
 router.get("/me", isAuthenticated, new DetailUserController().handle);
@@ -38,7 +42,7 @@ router.post(
   isAuthenticated,
   isAdmin,
   validateSchema(createCategorySchema),
-  new CreateCategoryController().handle
+  new CreateCategoryController().handle,
 );
 
 router.get("/category", isAuthenticated, new ListCategoryController().handle);
@@ -50,7 +54,14 @@ router.post(
   isAdmin,
   upload.single("file"),
   validateSchema(createProductSchema),
-  new CreateProductController().handle
+  new CreateProductController().handle,
+);
+
+router.get(
+  "/products",
+  isAuthenticated,
+  validateSchema(listProductSchema),
+  new ListProductController().handle,
 );
 
 export { router };

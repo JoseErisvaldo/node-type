@@ -10,3 +10,9 @@ export const createProductSchema = z.object({
     category_id: z.string({ message: "A Categoria do produto é obrigatória" }),
   }),
 });
+
+export const listProductSchema = z.object({
+  query: z.object({
+    disabled: z.string().optional(),
+  }),
+});
