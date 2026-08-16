@@ -11,6 +11,7 @@ import { isAdmin } from "./middlewares/isAdmin";
 import { isAuthenticated } from "./middlewares/isAuthenticated";
 import { validateSchema } from "./middlewares/validateSchema";
 import { createCategorySchema } from "./schemas/categorySchema";
+import { addItemOrderSchema } from "./schemas/orderSchema";
 import {
   createProductSchema,
   listProductsByCategorySchema,
@@ -23,6 +24,7 @@ import { ListProductsByCategoryController } from "./controllers/product/ListProd
 import { createOrderSchema } from "./schemas/orderSchema";
 import { CreateOrderController } from "./controllers/order/CreateOrderController";
 import { ListOrdersController } from "./controllers/order/ListOrderController";
+import { AddItemOrderController } from "./controllers/order/AddItemOrderController";
 
 const router = Router();
 const upload = multer(uploadConfig);
@@ -93,5 +95,12 @@ router.post(
 );
 
 router.get("/orders", isAuthenticated, new ListOrdersController().handle);
+
+router.post(
+  "/order/add",
+  isAuthenticated,
+  validateSchema(addItemOrderSchema),
+  new AddItemOrderController().handle,
+);
 
 export { router };
