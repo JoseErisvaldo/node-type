@@ -14,6 +14,7 @@ import { createCategorySchema } from "./schemas/categorySchema";
 import {
   addItemOrderSchema,
   deleteItemOrderSchema,
+  detailOrderSchema,
 } from "./schemas/orderSchema";
 import {
   createProductSchema,
@@ -29,6 +30,7 @@ import { CreateOrderController } from "./controllers/order/CreateOrderController
 import { ListOrdersController } from "./controllers/order/ListOrderController";
 import { AddItemOrderController } from "./controllers/order/AddItemOrderController";
 import { DeleteItemOrderController } from "./controllers/order/DeleteItemOrderController";
+import { DetailOrderController } from "./controllers/order/DetailOrderController";
 
 const router = Router();
 const upload = multer(uploadConfig);
@@ -112,6 +114,13 @@ router.delete(
   isAuthenticated,
   validateSchema(deleteItemOrderSchema),
   new DeleteItemOrderController().handle,
+);
+
+router.get(
+  "/order/detail",
+  isAuthenticated,
+  validateSchema(detailOrderSchema),
+  new DetailOrderController().handle,
 );
 
 export { router };
