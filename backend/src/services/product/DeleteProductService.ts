@@ -13,14 +13,13 @@ class DeleteProductService {
         },
         data: {
           disabled: true,
-          updatedAt: new Date(),
         },
       });
 
-      return { message: "Product deleted successfully" };
+      return { message: "Produto deletado/arquivado com sucesso!" };
     } catch (err) {
       console.log(err);
-      throw new Error("Failed to delete product");
+      throw new Error("Fa");
     }
   }
 }

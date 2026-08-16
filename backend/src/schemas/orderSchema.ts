@@ -16,3 +16,14 @@ export const addItemOrderSchema = z.object({
       .min(1, { message: "A quantidade deve ser maior que zero" }),
   }),
 });
+
+export const deleteItemOrderSchema = z.object({
+  body: z
+    .object({
+      item_id: z
+        .string()
+        .min(1, { message: "O ID do item é obrigatório" })
+        .optional(),
+    })
+    .optional(),
+});

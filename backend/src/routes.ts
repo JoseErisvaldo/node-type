@@ -11,7 +11,10 @@ import { isAdmin } from "./middlewares/isAdmin";
 import { isAuthenticated } from "./middlewares/isAuthenticated";
 import { validateSchema } from "./middlewares/validateSchema";
 import { createCategorySchema } from "./schemas/categorySchema";
-import { addItemOrderSchema } from "./schemas/orderSchema";
+import {
+  addItemOrderSchema,
+  deleteItemOrderSchema,
+} from "./schemas/orderSchema";
 import {
   createProductSchema,
   listProductsByCategorySchema,
@@ -25,6 +28,7 @@ import { createOrderSchema } from "./schemas/orderSchema";
 import { CreateOrderController } from "./controllers/order/CreateOrderController";
 import { ListOrdersController } from "./controllers/order/ListOrderController";
 import { AddItemOrderController } from "./controllers/order/AddItemOrderController";
+import { DeleteItemOrderController } from "./controllers/order/DeleteItemOrderController";
 
 const router = Router();
 const upload = multer(uploadConfig);
@@ -101,6 +105,13 @@ router.post(
   isAuthenticated,
   validateSchema(addItemOrderSchema),
   new AddItemOrderController().handle,
+);
+
+router.delete(
+  "/order/remove",
+  isAuthenticated,
+  validateSchema(deleteItemOrderSchema),
+  new DeleteItemOrderController().handle,
 );
 
 export { router };
