@@ -13,11 +13,13 @@ import { validateSchema } from "./middlewares/validateSchema";
 import { createCategorySchema } from "./schemas/categorySchema";
 import {
   createProductSchema,
+  listProductsByCategorySchema,
   listProductSchema,
 } from "./schemas/productSchema";
 import { authUserSchema, createUserSchema } from "./schemas/userSchema";
 import { ListProductController } from "./controllers/product/ListProductController";
 import { DeleteProductController } from "./controllers/product/DeleteProductController";
+import { ListProductsByCategoryController } from "./controllers/product/ListProductsByCategoryController";
 
 const router = Router();
 const upload = multer(uploadConfig);
@@ -70,6 +72,13 @@ router.delete(
   isAuthenticated,
   isAdmin,
   new DeleteProductController().handle,
+);
+
+router.get(
+  "/category/product",
+  isAuthenticated,
+  validateSchema(listProductsByCategorySchema),
+  new ListProductsByCategoryController().handle,
 );
 
 export { router };
